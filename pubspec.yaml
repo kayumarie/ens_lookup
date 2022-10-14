@@ -1,6 +1,6 @@
 name: ens_lookup
 description: Simple package for ENS lookup
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/kayumarie/ens_lookup
 
 environment:
