@@ -1,5 +1,4 @@
 import 'package:ens_lookup/ens_lookup.dart';
-import 'package:ens_lookup/src/model/errors.dart';
 import 'package:http/http.dart';
 import 'package:test/test.dart';
 import 'package:web3dart/web3dart.dart';
@@ -22,15 +21,16 @@ void main() {
       expect(address, '0x8ba1f109551bD432803012645Ac136ddd64DBA72');
     });
 
-    test('Given valid ens name when ens entry does not exist then return null', () async {
-      final address = await ensService.resolveName('not-found-fldnflqwkfvaoksdjvasjdvkanjvlkj.fldnflqwkfvaoksdjvasjdvkanjvlkj');
-      expect(address, null);
+    test('Given valid ens name containing emojis when ens entry exists then return address', () async {
+      final address = await ensService.resolveName('💎🙌🦍🚀🌑.eth');
+      print(address);
+      expect(address, '0x513a76F5C1f503803DE5B2893F428B3dB86d69CD');
     });
 
-    test('Given invalid ens then return an error', () async {
-      ensService.resolveName("%%\$\$33").catchError((error) {
-        expect(error, isA<InvalidEnsName>());
-      });
+    test('Given valid ens name when ens entry does not exist then return null', () async {
+      final address =
+          await ensService.resolveName('not-found-fldnflqwkfvaoksdjvasjdvkanjvlkj.fldnflqwkfvaoksdjvasjdvkanjvlkj');
+      expect(address, null);
     });
   });
 }

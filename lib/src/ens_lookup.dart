@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:ens_lookup/src/model/errors.dart';
 import 'package:ens_lookup/src/utils/address_utils.dart';
 import 'package:ens_lookup/src/utils/hash_utils.dart';
 import 'package:web3dart/crypto.dart';
@@ -15,13 +14,11 @@ const _mainnetEnsAddressContact = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e";
 /// a correct integration of ENS treats any dot-separated name as a potential ENS name and will attempt a look-up.
 ///
 /// via https://github.com/ensdomains/docs/blob/master/dapp-developer-guide/resolving-names.md#resolving-names
-final _domainRegExp = RegExp(r"^[a-zA-Z0-9-.]+$");
 
 abstract class EnsLookup {
   static EnsLookup create(Web3Client client) => EnsLookupImpl(client: client);
 
   /// Returns ethereum address if ENS name can be resolved.
-  /// throws InvalidEnsName if domain is invalid
   Future<String?> resolveName(String domain);
 }
 
@@ -36,8 +33,6 @@ class EnsLookupImpl extends EnsLookup {
 
   @override
   Future<String?> resolveName(String domain) async {
-    if (!_domainRegExp.hasMatch(domain)) throw InvalidEnsName();
-
     // Get the resolver from the registry
     final resolverAddress = await _getResolver(domain);
     if (resolverAddress == null) return null;
