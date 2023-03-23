@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:ens_lookup/src/model/errors.dart';
 import 'package:ens_lookup/src/utils/address_utils.dart';
 import 'package:ens_lookup/src/utils/hash_utils.dart';
 import 'package:web3dart/crypto.dart';
@@ -33,6 +34,8 @@ class EnsLookupImpl extends EnsLookup {
 
   @override
   Future<String?> resolveName(String domain) async {
+    if (domain.startsWith('.')) throw InvalidEnsName();
+
     // Get the resolver from the registry
     final resolverAddress = await _getResolver(domain);
     if (resolverAddress == null) return null;
