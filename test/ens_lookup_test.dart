@@ -17,20 +17,55 @@ void main() {
       ));
     });
 
-    test('Given valid ens name when ens entry exists then return address', () async {
-      final address = await ensService.resolveName('ricmoo.firefly.eth');
-      expect(address, '0x8ba1f109551bD432803012645Ac136ddd64DBA72');
+    test('Given valid ENS name, find correct address', () async {
+      final names = [
+        'ricmoo.firefly.eth',
+        '💎🙌🦍🚀🌑.eth',
+        'haha.',
+        'lol',
+      ];
+
+      final addresses = [
+        '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
+        '0x513a76F5C1f503803DE5B2893F428B3dB86d69CD',
+        null,
+        null,
+      ];
+
+      int i = 0;
+      for (final name in names) {
+        final address = await ensService.resolveName(name);
+        expect(address, addresses[i]);
+
+        i++;
+      }
     });
 
     test('Given valid ens name when ens entry does not exist then return null', () async {
-      final address = await ensService.resolveName('not-found-fldnflqwkfvaoksdjvasjdvkanjvlkj.fldnflqwkfvaoksdjvasjdvkanjvlkj');
-      expect(address, null);
+      final names = [
+        'not-found-fldnflqwkfvaoksdjvasjdvkanjvlkj.fldnflqwkfvaoksdjvasjdvkanjvlkj',
+        'haha.',
+        'lol',
+      ];
+
+      for (final name in names) {
+        final address = await ensService.resolveName(name);
+        expect(address, null);
+      }
     });
 
     test('Given invalid ens then return an error', () async {
-      ensService.resolveName("%%\$\$33").catchError((error) {
-        expect(error, isA<InvalidEnsName>());
-      });
+      final names = [
+        "%%\$\$33",
+        '.eth',
+      ];
+
+      for (final name in names) {
+        ensService.resolveName(name).catchError((error) {
+          expect(error, isA<InvalidEnsName>());
+          return null;
+        });
+      }
     });
   });
 }
