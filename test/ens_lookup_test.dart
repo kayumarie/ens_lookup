@@ -63,6 +63,7 @@ void main() {
       for (final name in names) {
         ensService.resolveName(name).catchError((error) {
           expect(error, isA<InvalidEnsName>());
+          return null;
         });
       }
     });
